@@ -50,6 +50,8 @@ class AssignmentGroup(SQLModel, table=True):
   assignments: list["Assignment"] = Relationship()
 
 class Assignment(SQLModel, table=True):
+  __tablename__ = "assignments"
+
   id: int | None = Field(default=None, primary_key=True)
   course_id: int = Field(foreign_key="courses.id", ondelete="CASCADE")
   group_id: int = Field(foreign_key="assignment_groups.id", ondelete="CASCADE")
