@@ -1,5 +1,6 @@
-from sqlmodel import CheckConstraint, Field, Relationship, SQLModel
 from datetime import datetime
+from sqlalchemy import BigInteger, DateTime
+from sqlmodel import CheckConstraint, Field, Relationship, SQLModel
 
 class User(SQLModel, table=True):
   __tablename__ = "users"
@@ -8,6 +9,7 @@ class User(SQLModel, table=True):
   google_id: str = Field(unique=True)
   refresh_token: str
   canvas_token: str
+  canvas_url: str
   name: str
   email: str = Field(unique=True)
   max_block_size: int
@@ -32,36 +34,35 @@ class AvailabilityBlock(SQLModel, table=True):
 class Course(SQLModel, table=True):
   __tablename__ = "courses"
 
-  id: int | None = Field(default=None, primary_key=True)
+  id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
   user_id: int = Field(foreign_key="users.id", ondelete="CASCADE")
   name: str
   current_grade: float | None = None
-  active: bool
+  active: bool = True
   assignment_groups: list["AssignmentGroup"] = Relationship()
   assignments: list["Assignment"] = Relationship()
 
 class AssignmentGroup(SQLModel, table=True):
   __tablename__ = "assignment_groups"
 
-  id: int | None = Field(default=None, primary_key=True)
-  course_id: int = Field(foreign_key="courses.id", ondelete="CASCADE")
+  id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
+  course_id: int = Field(foreign_key="courses.id", sa_type=BigInteger, ondelete="CASCADE")
   name: str
   group_weight: float
-  assignments: list["Assignment"] = Relationship()
 
 class Assignment(SQLModel, table=True):
   __tablename__ = "assignments"
 
-  id: int | None = Field(default=None, primary_key=True)
-  course_id: int = Field(foreign_key="courses.id", ondelete="CASCADE")
-  group_id: int = Field(foreign_key="assignment_groups.id", ondelete="CASCADE")
+  id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
+  course_id: int = Field(foreign_key="courses.id", sa_type=BigInteger,  ondelete="CASCADE")
+  group_id: int = Field(foreign_key="assignment_groups.id", sa_type=BigInteger, ondelete="CASCADE")
   group: AssignmentGroup = Relationship()
-  title: str
+  name: str
   description: str
-  due_at: datetime | None = None
-  type: str
+  description_hash: str
+  due_at: datetime | None = Field(default=None, sa_type=DateTime(timezone=True))
   points_possible: float
   submission_status: str
-  estimated_time: int # minutes
+  estimated_minutes: int
   grade_impact: float
-  active: bool
+  active: bool = True
