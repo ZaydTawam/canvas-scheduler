@@ -48,7 +48,8 @@ class AssignmentGroup(SQLModel, table=True):
   id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
   course_id: int = Field(foreign_key="courses.id", sa_type=BigInteger, ondelete="CASCADE")
   name: str
-  group_weight: float
+  weight: float
+  assignments: list["Assignment"] = Relationship(back_populates="group")
 
 class Assignment(SQLModel, table=True):
   __tablename__ = "assignments"
@@ -56,7 +57,7 @@ class Assignment(SQLModel, table=True):
   id: int | None = Field(default=None, sa_type=BigInteger, primary_key=True)
   course_id: int = Field(foreign_key="courses.id", sa_type=BigInteger,  ondelete="CASCADE")
   group_id: int = Field(foreign_key="assignment_groups.id", sa_type=BigInteger, ondelete="CASCADE")
-  group: AssignmentGroup = Relationship()
+  group: AssignmentGroup = Relationship(back_populates="assignments")
   name: str
   description: str
   description_hash: str
