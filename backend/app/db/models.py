@@ -12,7 +12,8 @@ class User(SQLModel, table=True):
   canvas_url: str
   name: str
   email: str = Field(unique=True)
-  max_block_size: int
+  timezone: str
+  max_block_minutes: int
   availability_blocks: list["AvailabilityBlock"] = Relationship()
 
 class AvailabilityBlock(SQLModel, table=True):
