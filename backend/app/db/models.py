@@ -1,6 +1,7 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import BigInteger, DateTime
 from sqlmodel import CheckConstraint, Field, Relationship, SQLModel
+import uuid
 
 class User(SQLModel, table=True):
   __tablename__ = "users"
@@ -8,13 +9,14 @@ class User(SQLModel, table=True):
   id: int | None = Field(default=None, primary_key=True)
   google_id: str = Field(unique=True)
   refresh_token: str
-  canvas_token: str
-  canvas_url: str
-  name: str
+  canvas_token: str | None = None
+  canvas_url: str | None = None
+  name: str | None
   email: str = Field(unique=True)
-  timezone: str
-  max_block_minutes: int
+  timezone: str | None = None
+  max_block_minutes: int | None = None
   availability_blocks: list["AvailabilityBlock"] = Relationship()
+  courses: list["Course"] = Relationship()
 
 class AvailabilityBlock(SQLModel, table=True):
   __tablename__ = "availability_blocks"
