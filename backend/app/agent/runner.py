@@ -72,9 +72,3 @@ def run_agent_loop(user: User, change_log):
       thinking={"type": "enabled", "budget_tokens": 1024},
       messages=messages
     )    
-
-  for block in response.content:
-    if block.type == "text":
-      print(block.text)
-    elif block.type == "thinking":
-      print(f"\nThinking: {block.thinking}")

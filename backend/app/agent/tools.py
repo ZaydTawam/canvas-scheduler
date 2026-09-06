@@ -1,3 +1,6 @@
+from app.agent.services.assignments import get_assignment_details
+from app.agent.services.google_calendar import get_calendar_availability, get_scheduled_blocks, get_assignment_blocks, create_assignment_block, move_calendar_block, delete_calendar_block
+
 tools = [
   {
     "name": "get_calendar_availability",
@@ -50,7 +53,7 @@ tools = [
       "type": "object",
       "properties": {
         "assignment_id": {
-          "type": "int",
+          "type": "integer",
           "description": "Identifies which assignment this block is for. This is not a scheduled block's ID or a calendar event ID."
         },
       },
@@ -64,7 +67,7 @@ tools = [
       "type": "object",
       "properties": {
         "assignment_id": {
-          "type": "int",
+          "type": "integer",
           "description": "Identifies which assignment to lookup. This is not a scheduled block's ID or a calendar event ID."
         },
       },
@@ -78,7 +81,7 @@ tools = [
       "type": "object",
       "properties": {
         "assignment_id": {
-          "type": "int",
+          "type": "integer",
           "description": "Identifies which assignment this block is for. This is not a calendar event ID."
         },
         "title": {
@@ -154,21 +157,21 @@ tools = [
 ]
 
 
-def run_tool(name, tool_input):
+def run_tool(name, tool_input, user):
   if name == "get_calendar_availability":
-    return
+    return get_calendar_availability(user, tool_input["start_time"], tool_input["end_time"])
   if name == "get_scheduled_blocks":
-    return
+    return get_scheduled_blocks(user, tool_input["start_time"], tool_input["end_time"])
   if name == "get_assignment_blocks":
-    return
+    return get_assignment_blocks(user, tool_input["assignment_id"])
   if name == "get_assignment_details":
-    return
+    return get_assignment_details(tool_input["assignment_id"])
   if name == "create_assignment_block":
-    return
+    return create_assignment_block(user, tool_input["title"], tool_input["start_time"], tool_input["end_time"], tool_input["assignment_id"])
   if name == "move_calendar_block":
-    return 
+    return move_calendar_block(user, tool_input["calendar_event_id"], tool_input["start_time"], tool_input["end_time"])
   if name == "delete_calendar_block":
-    return
+    return delete_calendar_block(user, tool_input["calendar_event_id"])
   if name == "surface_alert":
     return
   
